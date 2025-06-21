@@ -1,4 +1,4 @@
-# Library Management API
+# LibHero - Library Management API
 
 A Library Management System built with Express, TypeScript, and MongoDB.
 
@@ -29,28 +29,33 @@ A Library Management System built with Express, TypeScript, and MongoDB.
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone <repository-url>
 cd lib-hero
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Create a `.env` file in the root directory:
+
 ```env
 PORT=5000
 MONGODB_URI=mongodb://localhost:27017/lib-hero
 ```
 
 4. Build the project:
+
 ```bash
 npm run build
 ```
 
 5. Start the development server:
+
 ```bash
 npm run dev
 ```
@@ -62,8 +67,10 @@ The server will start on `http://localhost:5000`
 ### Books
 
 #### Create Book
+
 - **POST** `/api/books`
 - **Body**:
+
 ```json
 {
   "title": "The Theory of Everything",
@@ -77,6 +84,7 @@ The server will start on `http://localhost:5000`
 ```
 
 #### Get All Books
+
 - **GET** `/api/books`
 - **Query Parameters**:
   - `filter`: Filter by genre (FICTION, NON_FICTION, SCIENCE, HISTORY, BIOGRAPHY, FANTASY)
@@ -87,20 +95,25 @@ The server will start on `http://localhost:5000`
 Example: `/api/books?filter=SCIENCE&sort=desc&limit=5`
 
 #### Get Book by ID
+
 - **GET** `/api/books/:bookId`
 
 #### Update Book
+
 - **PUT** `/api/books/:bookId`
 - **Body**: Any book fields to update
 
 #### Delete Book
+
 - **DELETE** `/api/books/:bookId`
 
 ### Borrowing
 
 #### Borrow Book
+
 - **POST** `/api/borrow`
 - **Body**:
+
 ```json
 {
   "book": "64ab3f9e2a4b5c6d7e8f9012",
@@ -110,23 +123,27 @@ Example: `/api/books?filter=SCIENCE&sort=desc&limit=5`
 ```
 
 #### Get Borrowed Books Summary
+
 - **GET** `/api/borrow`
 - Returns aggregated summary of all borrowed books
 
 ## Business Logic
 
 ### Book Availability
+
 - Books automatically update `available` status based on `copies` count
 - Pre-save middleware ensures availability is always accurate
 - Static and instance methods for availability management
 
 ### Borrowing Process
+
 1. Validates book exists and has sufficient copies
 2. Creates borrow record
 3. Deducts quantity from book inventory
 4. Updates book availability if copies reach zero
 
 ### Validation
+
 - All requests validated using custom middleware
 - Proper error responses with detailed validation messages
 - Genre validation against predefined enum values
@@ -135,6 +152,7 @@ Example: `/api/books?filter=SCIENCE&sort=desc&limit=5`
 ## Data Models
 
 ### Book Schema
+
 ```typescript
 {
   title: string (required)
@@ -150,6 +168,7 @@ Example: `/api/books?filter=SCIENCE&sort=desc&limit=5`
 ```
 
 ### Borrow Schema
+
 ```typescript
 {
   book: ObjectId (required, ref: Book)
@@ -163,6 +182,7 @@ Example: `/api/books?filter=SCIENCE&sort=desc&limit=5`
 ## Error Handling
 
 The API includes comprehensive error handling for:
+
 - Validation errors
 - Resource not found (404)
 - Duplicate key violations
@@ -175,30 +195,6 @@ The API includes comprehensive error handling for:
 - `npm run build`: Build TypeScript to JavaScript
 - `npm start`: Start production server
 - `npm test`: Run tests (to be implemented)
-
-## Project Structure
-
-```
-src/
-├── app/
-│   ├── config/
-│   │   └── database.ts
-│   ├── controller/
-│   │   ├── book.controller.ts
-│   │   └── borrow.controller.ts
-│   ├── middlewares/
-│   │   ├── error.middleware.ts
-│   │   └── validate.middleware.ts
-│   ├── models/
-│   │   ├── book.model.ts
-│   │   └── borrow.model.ts
-│   └── routes/
-│       ├── book.routes.ts
-│       ├── borrow.routes.ts
-│       └── index.ts
-├── app.ts
-└── server.ts
-```
 
 ## Environment Variables
 
