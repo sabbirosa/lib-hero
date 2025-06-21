@@ -1,18 +1,22 @@
-import express from "express";
-import {
-  createBook,
-  deleteBookByID,
-  getBookByID,
-  getBooks,
-  updateBookByID,
-} from "../services/book.service";
+import express from 'express';
+import { createBook, deleteBook, getBookById, getBooks, updateBook } from '../controller/book.controller';
+import { createBookValidation, updateBookValidation } from '../middlewares/validate.middleware';
 
-const BookRoutes = express.Router();
+const router = express.Router();
 
-BookRoutes.get("/", getBooks);
-BookRoutes.post("/", createBook);
-BookRoutes.get("/:bookID", getBookByID);
-BookRoutes.put("/:bookID", updateBookByID);
-BookRoutes.delete("/:bookID", deleteBookByID);
+// Create a new book
+router.post('/', createBookValidation, createBook);
 
-export default BookRoutes;
+// Get all books with filtering and sorting
+router.get('/', getBooks);
+
+// Get a book by ID
+router.get('/:bookId', getBookById);
+
+// Update a book by ID
+router.put('/:bookId', updateBookValidation, updateBook);
+
+// Delete a book by ID
+router.delete('/:bookId', deleteBook);
+
+export default router;
