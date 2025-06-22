@@ -13,16 +13,16 @@ export const borrowBook = async (req: Request, res: Response, next: NextFunction
     // Check if book exists and has enough copies
     const book = await checkBookAvailability(borrowData.book, borrowData.quantity);
     
-    // Update book copies
-    const newCopiesCount = book.copies - borrowData.quantity;
-    await updateBookCopies(borrowData.book, newCopiesCount);
-
-    // Create borrow record
+    // Create borrow record first (this will validate due date)
     const borrow = await Borrow.create({
       book: borrowData.book,
       quantity: borrowData.quantity,
       dueDate: new Date(borrowData.dueDate)
     });
+
+    // Only update book copies if borrow record creation was successful
+    const newCopiesCount = book.copies - borrowData.quantity;
+    await updateBookCopies(borrowData.book, newCopiesCount);
     
     res.status(201).json({
       success: true,
