@@ -1,6 +1,6 @@
 import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
 
-interface CustomError extends Error {
+export interface CustomError extends Error {
   statusCode?: number;
   code?: number;
   name: string;

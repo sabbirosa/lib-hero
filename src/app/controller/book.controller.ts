@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { CustomError } from "../middlewares/error.middleware";
 import { Book } from "../models/book.model";
 
 interface QueryParams {
@@ -163,14 +164,42 @@ export const checkBookAvailability = async (
 ) => {
   const book = await Book.findById(bookId);
   if (!book) {
-    const error = new Error("Book not found");
-    (error as any).statusCode = 404;
+    const error = new Error("Book not found") as CustomError;
+    error.name = "NotFoundError";
+    error.statusCode = 404;
+    error.errors = {
+      bookId: {
+        message: "Book not found",
+        name: "NotFoundError",
+        properties: {
+          message: "Book not found",
+          type: "not_found",
+        },
+        kind: "not_found",
+        path: "bookId",
+        value: bookId,
+      },
+    };
     throw error;
   }
 
   if (book.copies < requestedQuantity) {
-    const error = new Error("Insufficient copies available");
-    (error as any).statusCode = 400;
+    const error = new Error("Not enough copies available") as CustomError;
+    error.name = "InsufficientCopiesError";
+    error.statusCode = 400;
+    error.errors = {
+      requestedQuantity: {
+        message: `Requested quantity exceeds available copies. Available: ${book.copies}`,
+        name: "InsufficientCopiesError",
+        properties: {
+          message: `Requested quantity exceeds available copies. Available: ${book.copies}`,
+          type: "insufficient_copies",
+        },
+        kind: "insufficient_copies",
+        path: "requestedQuantity",
+        value: requestedQuantity,
+      },
+    };
     throw error;
   }
 
